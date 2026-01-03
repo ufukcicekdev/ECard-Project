@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - Digital Business Card{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Your Profile Dashboard</h1>
+    
+    <form method="post" class="bg-white shadow-md rounded-lg p-6" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-12">
+            <div class="sm:col-span-12">
+                <h2 class="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
+            </div>
+            
+            <div class="sm:col-span-4 flex justify-center">
+                <div class="relative">
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="Profile" class="w-32 h-32 rounded-full object-cover border-4 border-gray-200">
+                    {% else %}
+                        <div class="w-32 h-32 rounded-full bg-gray-200 border-2 border-dashed flex items-center justify-center text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <label class="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow cursor-pointer">
+                        <input type="file" name="profile_image" accept="image/*" class="hidden" id="profile_image_input">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="sm:col-span-8">
+                <div class="grid grid-cols-1 gap-y-4">
+                    <div class="sm:col-span-6">
+                        <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <div class="mt-1">
+                            <input type="text" name="full_name" id="full_name" value="{{ profile.full_name }}" 
+                                   class="py-2 px-3 block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-6">
+                        <label for="job_title" class="block text-sm font-medium text-gray-700">Job Title</label>
+                        <div class="mt-1">
+                            <input type="text" name="job_title" id="job_title" value="{{ profile.job_title }}" 
+                                   class="py-2 px-3 block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-6">
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                        <div class="mt-1">
+                            <input type="email" name="email" id="email" value="{{ profile.email|default:'' }}" 
+                                   class="py-2 px-3 block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-6">
+                        <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                        <div class="mt-1">
+                            <input type="tel" name="phone" id="phone" value="{{ profile.phone_number|default:'' }}" 
+                                   class="py-2 px-3 block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <div class="mt-1">
+                <textarea name="description" id="description" rows="4" 
+                          class="py-2 px-3 block w-full max-w-2xl rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{{ profile.description|default:'' }}</textarea>
+            </div>
+            <p class="mt-1 text-sm text-gray-500">Maximum 2500 characters</p>
+        </div>
+
+        <div class="mt-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-900">Social Media Links</h2>
+                <button type="button" id="add-social-link" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Add Link
+                </button>
+            </div>
+            
+            <div id="social-links-container">
+                {% for link in profile.social_links.all %}
+                    <div class="grid grid-cols-12 gap-4 items-center mb-3 social-link-item">
+                        <div class="sm:col-span-4">
+                            <select name="platform_{{ forloop.counter0 }}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                <option value="">Select Platform</option>
+                                <option value="twitter" {% if link.platform == 'twitter' %}selected{% endif %}>Twitter/X</option>
+                                <option value="linkedin" {% if link.platform == 'linkedin' %}selected{% endif %}>LinkedIn</option>
+                                <option value="instagram" {% if link.platform == 'instagram' %}selected{% endif %}>Instagram</option>
+                                <option value="facebook" {% if link.platform == 'facebook' %}selected{% endif %}>Facebook</option>
+                                <option value="github" {% if link.platform == 'github' %}selected{% endif %}>GitHub</option>
+                                <option value="youtube" {% if link.platform == 'youtube' %}selected{% endif %}>YouTube</option>
+                                <option value="tiktok" {% if link.platform == 'tiktok' %}selected{% endif %}>TikTok</option>
+                                <option value="other" {% if link.platform == 'other' %}selected{% endif %}>Other</option>
+                            </select>
+                            <input type="hidden" name="link_id_{{ forloop.counter0 }}" value="{{ link.id }}">
+                        </div>
+                        <div class="sm:col-span-7">
+                            <input type="url" name="url_{{ forloop.counter0 }}" value="{{ link.url }}" 
+                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://...">
+                        </div>
+                        <div class="sm:col-span-1">
+                            <button type="button" class="remove-social-link text-red-600 hover:text-red-900">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Template for new social media links -->
+            <div id="social-link-template" class="hidden">
+                <div class="grid grid-cols-12 gap-4 items-center mb-3 social-link-item">
+                    <div class="sm:col-span-4">
+                        <select name="platform_{index}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            <option value="">Select Platform</option>
+                            <option value="twitter">Twitter/X</option>
+                            <option value="linkedin">LinkedIn</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="github">GitHub</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-7">
+                        <input type="url" name="url_{index}" 
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://...">
+                    </div>
+                    <div class="sm:col-span-1">
+                        <button type="button" class="remove-social-link text-red-600 hover:text-red-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <button type="submit" 
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Update Profile
+            </button>
+            
+            <a href="{% url 'public_profile' profile.slug %}" 
+               class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                View Public Profile
+            </a>
+            
+            <a href="{% url 'bluetooth_sync' %}" 
+               class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Sync to Badge
+            </a>
+        </div>
+    </form>
+    
+    <div class="mt-8 bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Your Profile URL</h2>
+        <div class="flex items-center">
+            <input type="text" value="{{ request.build_absolute_uri }}p/{{ profile.slug }}/" readonly 
+                   class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-50">
+            <button onclick="copyToClipboard('{{ request.build_absolute_uri }}p/{{ profile.slug }}/')" 
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Copy
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        alert('URL copied to clipboard!');
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    let socialLinkIndex = {{ profile.social_links.count }};
+    
+    // Add social media link
+    document.getElementById('add-social-link').addEventListener('click', function() {
+        const template = document.getElementById('social-link-template').cloneNode(true);
+        template.id = '';
+        template.classList.remove('hidden');
+        
+        // Replace {index} with actual index
+        const html = template.innerHTML.replace(/{index}/g, socialLinkIndex);
+        template.innerHTML = html;
+        
+        document.getElementById('social-links-container').appendChild(template);
+        socialLinkIndex++;
+    });
+    
+    // Remove social media link
+    document.addEventListener('click', function(e) {
+        if (e.target.closest('.remove-social-link')) {
+            const socialLinkItem = e.target.closest('.social-link-item');
+            if (socialLinkItem) {
+                socialLinkItem.remove();
+            }
+        }
+    });
+    
+    // Handle profile image preview
+    document.getElementById('profile_image_input').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                // Update the profile image display
+                const profileDiv = document.querySelector('.sm\\:col-span-4.flex.justify-center .relative');
+                let img = profileDiv.querySelector('img');
+                
+                if (img) {
+                    img.src = event.target.result;
+                } else {
+                    // Create new image element and insert it before the label
+                    const newImg = document.createElement('img');
+                    newImg.src = event.target.result;
+                    newImg.alt = "Profile";
+                    newImg.className = "w-32 h-32 rounded-full object-cover border-4 border-gray-200";
+                    
+                    const label = profileDiv.querySelector('label');
+                    profileDiv.insertBefore(newImg, label);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+{% endblock %}

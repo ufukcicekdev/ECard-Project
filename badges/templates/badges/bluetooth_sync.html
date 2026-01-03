@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bluetooth Sync - Digital Business Card{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6">Sync to Your Digital Badge</h1>
+    
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="mb-6">
+            <h2 class="text-lg font-medium text-gray-900">Your Profile Information</h2>
+            <div class="mt-2 p-4 bg-gray-50 rounded-md">
+                <p><span class="font-medium">Name:</span> {{ profile.full_name }}</p>
+                <p><span class="font-medium">Title:</span> {{ profile.job_title }}</p>
+                <p><span class="font-medium">Profile URL:</span> {{ request.build_absolute_uri }}p/{{ profile.slug }}/</p>
+            </div>
+        </div>
+        
+        <div class="mt-8">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Connect to Your Badge</h2>
+            <p class="text-gray-600 mb-4">Click the button below to connect your digital e-paper badge via Bluetooth.</p>
+            
+            <button id="connectButton" 
+                    data-full-name="{{ profile.full_name|escapejs }}"
+                    data-job-title="{{ profile.job_title|escapejs }}"
+                    data-profile-url="{{ request.build_absolute_uri }}p/{{ profile.slug }}/"
+                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                Connect & Sync to Badge
+            </button>
+            
+            <div id="status" class="mt-4 text-sm text-gray-600"></div>
+        </div>
+        
+        <div id="bluetoothInfo" class="mt-6 p-4 bg-blue-50 rounded-md hidden">
+            <h3 class="font-medium text-blue-800">Bluetooth Connection Info</h3>
+            <ul class="mt-2 text-sm text-blue-700 list-disc pl-5 space-y-1">
+                <li>Service UUID: 4fafc201-1fb5-459e-8fcc-c5c9c331914b</li>
+                <li>Characteristic UUID: beb5483e-36e1-4688-b7f5-ea07361b26a8</li>
+                <li>PIN/Passkey: 4456</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/bluetooth.js' %}"></script>
+{% endblock %}
