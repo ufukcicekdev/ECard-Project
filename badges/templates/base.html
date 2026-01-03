@@ -41,7 +41,41 @@
     </nav>
     
     <script>
+        // Set up CSRF token for AJAX requests
         document.addEventListener('DOMContentLoaded', function() {
+            // Get CSRF token from meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            // Set up default headers for fetch requests
+            if (window.fetch) {
+                const originalFetch = window.fetch;
+                window.fetch = function(...args) {
+                    if (args[1] && typeof args[1] === 'object') {
+                        args[1].headers = {
+                            ...args[1].headers,
+                            'X-CSRFToken': csrfToken
+                        };
+                    } else {
+                        args[1] = {
+                            headers: {
+                                'X-CSRFToken': csrfToken
+                            }
+                        };
+                    }
+                    return originalFetch.apply(this, args);
+                };
+            }
+            
+            // Set up XMLHttpRequest default headers for CSRF
+            const originalOpen = XMLHttpRequest.prototype.open;
+            XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
+                const result = originalOpen.apply(this, arguments);
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(method)) {
+                    this.setRequestHeader('X-CSRFToken', csrfToken);
+                }
+                return result;
+            };
+            
             const userMenuButton = document.getElementById('user-menu');
             const userMenuDropdown = document.getElementById('user-menu-dropdown');
             
