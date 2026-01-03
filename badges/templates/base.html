@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Digital E-Paper Business Card{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
 </head>
 <body class="bg-gray-50 min-h-screen">
     <nav class="bg-white shadow-md">
@@ -15,7 +15,9 @@
                 <div class="flex items-center">
                     <a href="{% url 'home' %}" class="text-xl font-bold text-indigo-600">E-Paper Cards</a>
                 </div>
-                <div class="flex items-center space-x-4">
+                
+                <!-- Desktop menu -->
+                <div class="hidden md:flex items-center space-x-4">
                     <a href="{% url 'contact' %}" class="text-gray-700 hover:text-indigo-600">Contact</a>
                     {% if user.is_authenticated %}
                         <a href="{% url 'dashboard' %}" class="text-gray-700 hover:text-indigo-600">Dashboard</a>
@@ -29,6 +31,7 @@
                             </button>
                             <div id="user-menu-dropdown" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1" role="menu">
                                 <a href="{% url 'dashboard' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Your Profile</a>
+                                <a href="{% url 'bluetooth_sync' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sync to Badge</a>
                                 <a href="{% url 'logout' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">Sign out</a>
                             </div>
                         </div>
@@ -37,6 +40,30 @@
                         <!-- <a href="{% url 'register' %}" class="text-gray-700 hover:text-indigo-600">Kayıt Ol</a> -->
                     {% endif %}
                 </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-700 hover:text-indigo-600 focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="{% url 'contact' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-indigo-600">Contact</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-indigo-600">Dashboard</a>
+                    <a href="{% url 'bluetooth_sync' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-indigo-600">Sync to Badge</a>
+                    <a href="{% url 'logout' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-indigo-600">Sign out</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-indigo-600">Login</a>
+                    <!-- <a href="{% url 'register' %}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-white hover:bg-indigo-600">Register</a> -->
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -77,6 +104,7 @@
                 return result;
             };
             
+            // Desktop user menu functionality
             const userMenuButton = document.getElementById('user-menu');
             const userMenuDropdown = document.getElementById('user-menu-dropdown');
             
@@ -91,6 +119,16 @@
                     if (!userMenuButton.contains(e.target) && !userMenuDropdown.contains(e.target)) {
                         userMenuDropdown.classList.add('hidden');
                     }
+                });
+            }
+            
+            // Mobile menu functionality
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
                 });
             }
         });

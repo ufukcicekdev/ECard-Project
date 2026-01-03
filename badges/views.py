@@ -55,12 +55,22 @@ def dashboard(request):
         profile.save()
         
         # Handle social media links
-        # Delete existing links if needed (in case of form reset)
-        if 'reset_social_links' in request.POST:
-            profile.social_links.all().delete()
-        
-        # Add new social media links
+        # Get all platform keys to identify which links should exist
         platform_keys = [key for key in request.POST.keys() if key.startswith('platform_')]
+        
+        # Create a list of link IDs that are currently in the form
+        current_link_ids = []
+        for platform_key in platform_keys:
+            platform_index = platform_key.split('_')[1]
+            link_id = request.POST.get(f'link_id_{platform_index}')
+            if link_id:
+                current_link_ids.append(link_id)
+        
+        # Delete links that are not in the current form (i.e., were removed by user)
+        links_to_delete = profile.social_links.exclude(id__in=current_link_ids)
+        links_to_delete.delete()
+        
+        # Add/update social media links
         for platform_key in platform_keys:
             platform_index = platform_key.split('_')[1]
             platform_value = request.POST.get(platform_key)
@@ -76,19 +86,17 @@ def dashboard(request):
                         link.url = url_value
                         link.save()
                     except SocialMediaLink.DoesNotExist:
-                        SocialMediaLink.objects.create(profile=profile, platform=platform_value, url=url_value)
+                        SocialMediaLink.objects.create(
+                            profile=profile, 
+                            platform=platform_value, 
+                            url=url_value
+                        )
                 else:
-                    SocialMediaLink.objects.create(profile=profile, platform=platform_value, url=url_value)
-        
-        # Handle deletion of social links
-        delete_keys = [key for key in request.POST.keys() if key.startswith('delete_link_')]
-        for delete_key in delete_keys:
-            link_id = delete_key.split('_')[2]  # delete_link_{id}
-            try:
-                link = profile.social_links.get(id=link_id)
-                link.delete()
-            except SocialMediaLink.DoesNotExist:
-                pass
+                    SocialMediaLink.objects.create(
+                        profile=profile, 
+                        platform=platform_value, 
+                        url=url_value
+                    )
         
         messages.success(request, 'Profile updated successfully!')
         return redirect('dashboard')

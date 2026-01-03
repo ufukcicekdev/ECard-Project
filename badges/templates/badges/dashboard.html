@@ -95,26 +95,35 @@
             
             <div id="social-links-container">
                 {% for link in profile.social_links.all %}
-                    <div class="grid grid-cols-12 gap-4 items-center mb-3 social-link-item">
-                        <div class="sm:col-span-4">
-                            <select name="platform_{{ forloop.counter0 }}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                <option value="">Select Platform</option>
-                                <option value="twitter" {% if link.platform == 'twitter' %}selected{% endif %}>Twitter/X</option>
-                                <option value="linkedin" {% if link.platform == 'linkedin' %}selected{% endif %}>LinkedIn</option>
-                                <option value="instagram" {% if link.platform == 'instagram' %}selected{% endif %}>Instagram</option>
-                                <option value="facebook" {% if link.platform == 'facebook' %}selected{% endif %}>Facebook</option>
-                                <option value="github" {% if link.platform == 'github' %}selected{% endif %}>GitHub</option>
-                                <option value="youtube" {% if link.platform == 'youtube' %}selected{% endif %}>YouTube</option>
-                                <option value="tiktok" {% if link.platform == 'tiktok' %}selected{% endif %}>TikTok</option>
-                                <option value="other" {% if link.platform == 'other' %}selected{% endif %}>Other</option>
-                            </select>
-                            <input type="hidden" name="link_id_{{ forloop.counter0 }}" value="{{ link.id }}">
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center mb-3 social-link-item">
+                        <div class="md:col-span-5">
+                            <div class="relative">
+                                <input type="hidden" name="platform_{{ forloop.counter0 }}" value="{{ link.platform }}">
+                                <input type="hidden" name="link_id_{{ forloop.counter0 }}" value="{{ link.id }}">
+                                <button type="button" class="custom-select-trigger w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 pl-3 pr-10 text-left bg-white border flex items-center justify-between" data-target="platform_{{ forloop.counter0 }}">
+                                    <span class="platform-text">{{ link.platform|default:"Select Platform" }}</span>
+                                    <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                                <div class="custom-select-dropdown absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm hidden" data-target="platform_{{ forloop.counter0 }}">
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="">Select Platform</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="twitter">Twitter/X</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="linkedin">LinkedIn</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="instagram">Instagram</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="facebook">Facebook</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="github">GitHub</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="youtube">YouTube</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="tiktok">TikTok</div>
+                                    <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="other">Other</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="sm:col-span-7">
+                        <div class="md:col-span-6">
                             <input type="url" name="url_{{ forloop.counter0 }}" value="{{ link.url }}" 
                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://...">
                         </div>
-                        <div class="sm:col-span-1">
+                        <div class="md:col-span-1 flex justify-center">
                             <button type="button" class="remove-social-link text-red-600 hover:text-red-900">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -127,25 +136,34 @@
             
             <!-- Template for new social media links -->
             <div id="social-link-template" class="hidden">
-                <div class="grid grid-cols-12 gap-4 items-center mb-3 social-link-item">
-                    <div class="sm:col-span-4">
-                        <select name="platform_{index}" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                            <option value="">Select Platform</option>
-                            <option value="twitter">Twitter/X</option>
-                            <option value="linkedin">LinkedIn</option>
-                            <option value="instagram">Instagram</option>
-                            <option value="facebook">Facebook</option>
-                            <option value="github">GitHub</option>
-                            <option value="youtube">YouTube</option>
-                            <option value="tiktok">TikTok</option>
-                            <option value="other">Other</option>
-                        </select>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center mb-3 social-link-item">
+                    <div class="md:col-span-5">
+                        <div class="relative">
+                            <input type="hidden" name="platform_{index}" value="">
+                            <button type="button" class="custom-select-trigger w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-2 pl-3 pr-10 text-left bg-white border flex items-center justify-between" data-target="platform_{index}">
+                                <span class="platform-text">Select Platform</span>
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                            <div class="custom-select-dropdown absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm hidden" data-target="platform_{index}">
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="">Select Platform</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="twitter">Twitter/X</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="linkedin">LinkedIn</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="instagram">Instagram</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="facebook">Facebook</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="github">GitHub</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="youtube">YouTube</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="tiktok">TikTok</div>
+                                <div class="option-item px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-indigo-100 hover:text-indigo-900" data-value="other">Other</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="sm:col-span-7">
+                    <div class="md:col-span-6">
                         <input type="url" name="url_{index}" 
                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" placeholder="https://...">
                     </div>
-                    <div class="sm:col-span-1">
+                    <div class="md:col-span-1 flex justify-center">
                         <button type="button" class="remove-social-link text-red-600 hover:text-red-900">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -156,19 +174,19 @@
             </div>
         </div>
 
-        <div class="mt-8">
+        <div class="mt-8 flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
             <button type="submit" 
                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Update Profile
             </button>
             
-            <a href="{% url 'bluetooth_sync' %}" 
-               class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <a href="{% url 'public_profile' profile.slug %}" 
+               class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 View Public Profile
             </a>
             
             <a href="{% url 'bluetooth_sync' %}" 
-               class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+               class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Sync to Badge
             </a>
         </div>
@@ -176,11 +194,11 @@
     
     <div class="mt-8 bg-white shadow-md rounded-lg p-6">
         <h2 class="text-lg font-medium text-gray-900 mb-4">Your Profile URL</h2>
-        <div class="flex items-center">
+        <div class="flex flex-col sm:flex-row sm:items-center">
             <input type="text" value="{{ request.scheme }}://{{ request.get_host }}{% url 'public_profile' profile.slug %}" readonly 
-                   class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-50">
+                   class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-50 mb-2 sm:mb-0 sm:rounded-r-none sm:rounded-l-md">
             <button id="copy-profile-url-btn"
-                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:rounded-l-none sm:rounded-r-md">
                 Copy
             </button>
         </div>
@@ -206,7 +224,8 @@ document.addEventListener('DOMContentLoaded', function() {
         template.classList.remove('hidden');
         
         // Replace {index} with actual index
-        const html = template.innerHTML.replace(/{index}/g, socialLinkIndex);
+        let html = template.innerHTML;
+        html = html.replace(/{index}/g, socialLinkIndex);
         template.innerHTML = html;
         
         document.getElementById('social-links-container').appendChild(template);
@@ -261,6 +280,57 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Custom dropdown functionality
+    document.addEventListener('click', function(e) {
+        // Handle dropdown trigger clicks
+        if (e.target.closest('.custom-select-trigger')) {
+            e.preventDefault();
+            const trigger = e.target.closest('.custom-select-trigger');
+            const targetName = trigger.getAttribute('data-target');
+            const dropdown = document.querySelector(`.custom-select-dropdown[data-target="${targetName}"]`);
+            
+            // Close all other dropdowns
+            document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                if (d !== dropdown) d.classList.add('hidden');
+            });
+            
+            // Toggle current dropdown
+            dropdown.classList.toggle('hidden');
+        }
+        // Handle option selection
+        else if (e.target.closest('.option-item')) {
+            e.preventDefault();
+            const option = e.target.closest('.option-item');
+            const value = option.getAttribute('data-value');
+            const text = option.textContent;
+            const targetName = option.closest('.custom-select-dropdown').getAttribute('data-target');
+            
+            // Update the hidden input field
+            const hiddenInput = document.querySelector(`input[name="${targetName}"]`);
+            if (hiddenInput) {
+                hiddenInput.value = value;
+            }
+            
+            // Update the display text
+            const trigger = document.querySelector(`.custom-select-trigger[data-target="${targetName}"]`);
+            if (trigger) {
+                const textSpan = trigger.querySelector('.platform-text');
+                if (textSpan) {
+                    textSpan.textContent = text;
+                }
+            }
+            
+            // Close the dropdown
+            option.closest('.custom-select-dropdown').classList.add('hidden');
+        }
+        // Close dropdowns when clicking elsewhere
+        else {
+            document.querySelectorAll('.custom-select-dropdown').forEach(d => {
+                d.classList.add('hidden');
+            });
+        }
+    });
 });
 </script>
 {% endblock %}
