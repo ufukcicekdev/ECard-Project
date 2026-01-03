@@ -41,6 +41,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]  # Allow all hosts for Railway deployment
 
+# CSRF trusted origins for production
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app",  # Allow all railway domains
+    "https://web-production-2c08a.up.railway.app",  # Your specific domain
+    "http://localhost",
+    "http://127.0.0.1",
+]
 
 # Application definition
 
@@ -174,3 +181,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Authentication settings
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = '/'
+
+# Custom error handlers
+DEBUG = True  # Set to False in production
+if not DEBUG:
+    # Custom error handlers for production
+    HANDLER404 = 'django.views.defaults.page_not_found'
+    HANDLER500 = 'django.views.defaults.server_error'

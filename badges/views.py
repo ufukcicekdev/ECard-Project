@@ -151,7 +151,7 @@ def register(request):
     
     return render(request, 'registration/register.html', {'form': form})
 
-
+@csrf_exempt
 def login_view(request):
     """Custom login view"""
     if request.method == 'POST':
@@ -214,3 +214,13 @@ def logout_view(request):
 def home(request):
     """Home page view"""
     return render(request, 'home.html')
+
+
+def custom_404_view(request, exception):
+    """Custom 404 error page"""
+    return render(request, '404.html', status=404)
+
+
+def custom_500_view(request):
+    """Custom 500 error page"""
+    return render(request, '500.html', status=500)

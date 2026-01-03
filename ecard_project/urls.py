@@ -27,3 +27,8 @@ urlpatterns = [
 # Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# Custom error handlers
+handler404 = 'badges.views.custom_404_view'
+handler500 = 'badges.views.custom_500_view'
