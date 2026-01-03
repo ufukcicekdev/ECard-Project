@@ -162,7 +162,7 @@
                 Update Profile
             </button>
             
-            <a href="{% url 'public_profile' profile.slug %}" 
+            <a href="{% url 'bluetooth_sync' %}" 
                class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 View Public Profile
             </a>
@@ -177,9 +177,9 @@
     <div class="mt-8 bg-white shadow-md rounded-lg p-6">
         <h2 class="text-lg font-medium text-gray-900 mb-4">Your Profile URL</h2>
         <div class="flex items-center">
-            <input type="text" value="{{ request.build_absolute_uri }}p/{{ profile.slug }}/" readonly 
+            <input type="text" value="{{ request.scheme }}://{{ request.get_host }}{% url 'public_profile' profile.slug %}" readonly 
                    class="flex-1 min-w-0 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-50">
-            <button onclick="copyToClipboard('{{ request.build_absolute_uri }}p/{{ profile.slug }}/')" 
+            <button id="copy-profile-url-btn"
                     class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 Copy
             </button>
@@ -249,6 +249,18 @@ document.addEventListener('DOMContentLoaded', function() {
             reader.readAsDataURL(file);
         }
     });
+    
+    // Handle copy profile URL button
+    const copyProfileUrlBtn = document.getElementById('copy-profile-url-btn');
+    if (copyProfileUrlBtn) {
+        copyProfileUrlBtn.addEventListener('click', function() {
+            const profileUrlInput = copyProfileUrlBtn.parentElement.querySelector('input');
+            if (profileUrlInput) {
+                const profileUrl = profileUrlInput.value;
+                copyToClipboard(profileUrl);
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

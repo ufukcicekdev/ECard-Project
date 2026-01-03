@@ -13,7 +13,7 @@
             <div class="mt-2 p-4 bg-gray-50 rounded-md">
                 <p><span class="font-medium">Name:</span> {{ profile.full_name }}</p>
                 <p><span class="font-medium">Title:</span> {{ profile.job_title }}</p>
-                <p><span class="font-medium">Profile URL:</span> {{ request.build_absolute_uri }}p/{{ profile.slug }}/</p>
+                <p><span class="font-medium">Profile URL:</span> {{ request.scheme }}://{{ request.get_host }}{% url 'public_profile' profile.slug %}</p>
             </div>
         </div>
         
