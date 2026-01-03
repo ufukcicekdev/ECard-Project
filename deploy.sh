@@ -1,13 +1,16 @@
 #!/bin/bash
 # Deployment script for Railway
 
-# Collect static files
-echo "Collecting static files..."
-python manage.py collectstatic --noinput
+# Install dependencies
+pip install -r requirements.txt
 
 # Run database migrations
 echo "Running database migrations..."
 python manage.py migrate --noinput
+
+# Collect static files
+echo "Collecting static files..."
+python manage.py collectstatic --noinput --clear
 
 # Start the application
 echo "Starting application..."
