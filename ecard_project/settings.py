@@ -184,7 +184,6 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = '/'
 
 # Custom error handlers
-DEBUG = True  # Set to False in production
 if not DEBUG:
     # Custom error handlers for production
     HANDLER404 = 'django.views.defaults.page_not_found'
