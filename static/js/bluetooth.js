@@ -75,7 +75,7 @@ class BluetoothSync {
     if (!this.characteristic) throw new Error('No device connected.');
 
     try {
-        const dataString = `${fullName}|${jobTitle}|${profileUrl}`;
+        const dataString = `${fullName}*${jobTitle}*${profileUrl}`;
         const encoder = new TextEncoder();
         const data = encoder.encode(dataString);
 
