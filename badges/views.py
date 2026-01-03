@@ -216,6 +216,11 @@ def home(request):
     return render(request, 'home.html')
 
 
+def contact(request):
+    """Contact page view"""
+    return render(request, 'contact.html')
+
+
 def custom_404_view(request, exception):
     """Custom 404 error page"""
     return render(request, '404.html', status=404)
