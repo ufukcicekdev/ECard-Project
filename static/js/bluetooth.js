@@ -25,7 +25,7 @@ class BluetoothSync {
             
             this.device = await navigator.bluetooth.requestDevice({
                 filters: [
-                    { namePrefix: 'Digital_Badge_V1' },
+                    { namePrefix: 'Badge_Pro_V31' },
                     { services: [this.serviceUUID] }
                 ],
                 optionalServices: [this.serviceUUID]
