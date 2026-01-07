@@ -25,7 +25,7 @@ class BluetoothSync {
             
             this.device = await navigator.bluetooth.requestDevice({
                 filters: [
-                    { namePrefix: 'Digital_Badge_V1' },
+                    { namePrefix: 'Badge_Pro_V31' },
                     { services: [this.serviceUUID] }
                 ],
                 optionalServices: [this.serviceUUID]
@@ -75,7 +75,7 @@ class BluetoothSync {
     if (!this.characteristic) throw new Error('No device connected.');
 
     try {
-        const dataString = `${fullName}|${jobTitle}|${profileUrl}`;
+        const dataString = `${fullName}*${jobTitle}*${profileUrl}`;
         const encoder = new TextEncoder();
         const data = encoder.encode(dataString);
 
